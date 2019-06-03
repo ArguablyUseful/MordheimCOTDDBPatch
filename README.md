@@ -10,3 +10,5 @@ The mordheim database is inside steam filesystem : mordheim/mordheim_data/Stream
 
 
 DO NOT uses it twice : it adds and remove some rows, using it twice shouldn't do any harm to the DB (the file should just crash). But hey, who knows.
+
+USES those files in MP at your own risks : there was no check as to wheter or not the game would work fine in MP with modified DB.
