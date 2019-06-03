@@ -1,7 +1,7 @@
 import java.awt.EventQueue;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
+
 
 
 public class Patcher {
@@ -9,7 +9,7 @@ public class Patcher {
 	Connection conn;
 	String dbPath = "jdbc:sqlite:mordheim";
 	
-	public Patcher() throws SQLException
+	public Patcher() throws java.sql.SQLException
 	{
 		this.conn  = Common.Connect(dbPath);
 
@@ -26,7 +26,7 @@ public class Patcher {
 		
 		this.conn.close();
 	}
-	private void ReplaceField(String tableName, String columnName, int value, int key) throws SQLException
+	private void ReplaceField(String tableName, String columnName, int value, int key) throws java.sql.SQLException
 	{
 		String []keyCols = new String[1];
 		keyCols[0] = "id";
@@ -34,7 +34,7 @@ public class Patcher {
 		keys[0] = key;
 		ReplaceField(tableName, columnName, value, keyCols, keys);
 	}
-	private void ReplaceField(String tableName, String colunmName, int value, String []keyCols, int[] key) throws SQLException
+	private void ReplaceField(String tableName, String colunmName, int value, String []keyCols, int[] key) throws java.sql.SQLException
 	{
 		String sql = "UPDATE " + tableName + " SET " + colunmName + " = ? WHERE";
 		for(int index = 0; index < keyCols.length; index++)
@@ -53,7 +53,7 @@ public class Patcher {
         }
         pstmt.executeUpdate();		
 	}
-	private void AddEntry_enchantment_join_attribute(int fk_ench_id, int fk_attr_id, int modifier) throws SQLException {
+	private void AddEntry_enchantment_join_attribute(int fk_ench_id, int fk_attr_id, int modifier) throws java.sql.SQLException {
 	        String sql = "INSERT INTO enchantment_join_attribute(fk_enchantment_id,fk_attribute_id, modifier) VALUES(?,?,?)";
 	        PreparedStatement pstmt = conn.prepareStatement(sql);
 	        pstmt.setInt(1, fk_ench_id);
@@ -61,7 +61,7 @@ public class Patcher {
 	        pstmt.setInt(3, modifier);
 	        pstmt.executeUpdate();
 	   }
-	private void AddEntry_attribute_attribute(int id, int fk_attr_id_base, int fk_attr_id, int modifier) throws SQLException
+	private void AddEntry_attribute_attribute(int id, int fk_attr_id_base, int fk_attr_id, int modifier) throws java.sql.SQLException
 	{
 		String sql = "INSERT INTO attribute_attribute (id, fk_attribute_id, fk_attribute_id_base, modifier) VALUES(?,?,?,?)";
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -71,19 +71,19 @@ public class Patcher {
         pstmt.setInt(4, modifier);
         pstmt.executeUpdate();
 	}
-	private void RemoveEntry_attribute_attribute(int id_key) throws SQLException
+	private void RemoveEntry_attribute_attribute(int id_key) throws java.sql.SQLException
 	{
 		String sql = "DELETE FROM attribute_attribute WHERE ID = " + id_key;
 		PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.executeUpdate();	
 	}
-	private void RemoveEntry_skill_perform_skill(int id_key) throws SQLException
+	private void RemoveEntry_skill_perform_skill(int id_key) throws java.sql.SQLException
 	{
 		String sql = "DELETE FROM skill_perform_skill WHERE ID = " + id_key;
 		PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.executeUpdate();	
 	}
-	private void patch_doc_00() throws SQLException
+	private void patch_doc_00() throws java.sql.SQLException
 	{
 		//perception buff
 		ReplaceField("enchantment", "duration", 3, 219);
@@ -152,8 +152,14 @@ public class Patcher {
 		
 		
 	}
-	
-	private void patch_doc_01() throws SQLException
+		
+	private void Replace_enchantment_join_attribute(int fk_ench_id, int fk_attr_id, int mod, int newMod) throws java.sql.SQLException
+	{
+		String [] colKeys = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
+		int [] keys = {fk_ench_id, fk_attr_id, mod};
+		ReplaceField("enchantment_join_attribute", "modifier", newMod, colKeys, keys);
+	}
+	private void patch_doc_01() throws java.sql.SQLException
 	{
 		//intensity 
 		//trivial to train
@@ -176,17 +182,10 @@ public class Patcher {
 		ReplaceField("skill","stat_value", 6, 14 );
 		ReplaceField("skill","stat_value", 12, 15);
 		//buff magic res to 15%
-		{
-			String [] colKeys = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int [] keys = {118, 53, 5};
-			ReplaceField("enchantment_join_attribute", "modifier", 15, colKeys, keys);	
-		}
+		Replace_enchantment_join_attribute(118,53,5,15);
+		
 		//buff mastery magic res to 30%
-		{
-			String [] colKeys = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int [] keys = {119, 53, 10};
-			ReplaceField("enchantment_join_attribute", "modifier", 30, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(119,53,10,30);
 		
 		//skill ignore pain
 		ReplaceField("skill","stat_value", 6, 20 );
@@ -195,11 +194,8 @@ public class Patcher {
 		ReplaceField("enchantment", "duration", 2, 478);
 		ReplaceField("enchantment", "damage_min", 10, 480);
 		ReplaceField("enchantment", "damage_max", 10, 480);
-		{
-			String [] colKeys = { "fk_enchantment_id", "fk_attribute_id", "modifier" };
-			int [] keys = {478, 130, 10};
-			ReplaceField("enchantment_join_attribute", "modifier", 5, colKeys, keys); 		
-		}
+		Replace_enchantment_join_attribute(478,130,10,5);
+		
 		ReplaceField("enchantment", "duration", 3, 479);
 		ReplaceField("enchantment", "damage_min", 10, 811);
 		ReplaceField("enchantment", "damage_max", 10, 811);
@@ -238,7 +234,7 @@ public class Patcher {
 		
 	}
 	
-	private void patch_doc_02() throws SQLException
+	private void patch_doc_02() throws java.sql.SQLException
 	{
 		//Courage
 		ReplaceField("enchantment", "duration", 2, 123); 
@@ -254,33 +250,16 @@ public class Patcher {
 		ReplaceField("skill","points", 0, 36); //trivial to train
 		ReplaceField("skill","points", 2, 37); //easy to master
 		
-		{
-			String colKeys[] = { "fk_enchantment_id", "fk_attribute_id", "modifier" };
-			int keys[] = {509, 114, -10};
-			ReplaceField("enchantment_join_attribute","modifier", -5, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(509,114,-10,-5);
+		Replace_enchantment_join_attribute(510,114,-25,-35);
 		
-		{
-			String colKeys[] = { "fk_enchantment_id", "fk_attribute_id", "modifier" };
-			int keys[] = {510, 114, -25};
-			ReplaceField("enchantment_join_attribute","modifier", -35, colKeys, keys);
-		}
 		
 		//coordination
 
 		ReplaceField("enchantment", "duration", 1, 418);
-		
-		{
-			String colKeys[] = { "fk_enchantment_id", "fk_attribute_id", "modifier" };
-			int keys[] = {418, 76, 5};
-			ReplaceField("enchantment_join_attribute","modifier", 10, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(418,76,5,10);
 		ReplaceField("enchantment", "duration", 3, 419);
-		{
-			String colKeys[] = { "fk_enchantment_id", "fk_attribute_id", "modifier" };
-			int keys[] = {419, 76, 10};
-			ReplaceField("enchantment_join_attribute","modifier", 20, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(419,76,10,20);
 		//guidance 
 		
 		ReplaceField("skill", "points", 0, 305); //trivial to learn
@@ -292,63 +271,30 @@ public class Patcher {
 		
 		ReplaceField("enchantment", "duration", 2, 687);
 
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {687,40,5};
-			ReplaceField("enchantment_join_attribute", "modifier",10, colKeys, keys);
-		}
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {687,41,5};
-			ReplaceField("enchantment_join_attribute", "modifier",10, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(687,40,5,10);
+		Replace_enchantment_join_attribute(687,41,5,10);
 		
 		ReplaceField("enchantment", "duration", 3, 688);
-		
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {688,40,10};
-			ReplaceField("enchantment_join_attribute", "modifier",15, colKeys, keys);
-		}
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {688,41,10};
-			ReplaceField("enchantment_join_attribute", "modifier",15, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(688,40,10,15);
+		Replace_enchantment_join_attribute(688,41,10,15);
 		
 		//insult
 		
 		ReplaceField("enchantment", "duration", 2, 802);
 		ReplaceField("enchantment", "duration", 3, 803);
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {803,75,-20};
-			ReplaceField("enchantment_join_attribute", "modifier",-15, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(803,75,-20,-15);
 		
 		//intimidate
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {536,114,5};
-			ReplaceField("enchantment_join_attribute", "modifier",-5, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(536,114,5,-5);
 		//retreat
 		ReplaceField("skill","points", 0, 158); //trivial to learn
 		ReplaceField("skill","points", 2, 159); //easy to master
 		
 		//war cry
 		ReplaceField("enchantment", "duration", 2, 168);
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {168,61,10};
-			ReplaceField("enchantment_join_attribute", "modifier",5, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(168,61,10,5);
 		ReplaceField("enchantment", "duration", 3, 169);
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {169,61,20};
-			ReplaceField("enchantment_join_attribute", "modifier",10, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(169,61,20,10);
 		
 		//combat savy
 		ReplaceField("enchantment", "duration", 2, 438);
@@ -372,40 +318,25 @@ public class Patcher {
 			int keys[] = {437,74,-20};
 			ReplaceField("enchantment_join_attribute", "fk_attribute_id",75, colKeys, keys);
 		}
-		{//sets to -15 instead of -20
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {437,75,-20};
-			ReplaceField("enchantment_join_attribute", "modifier",-15, colKeys, keys);
-		}
+		
+		Replace_enchantment_join_attribute(437,75,-20,-15);
 		
 		//study
 		ReplaceField("enchantment", "duration", 2, 180);
 		ReplaceField("enchantment", "duration", 3, 181);
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {181,40,20};
-			ReplaceField("enchantment_join_attribute", "modifier",15, colKeys, keys);
-		}
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {181,41,20};
-			ReplaceField("enchantment_join_attribute", "modifier",15, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(181,40,20,15);
+		Replace_enchantment_join_attribute(181,41,20,15);
 		
 		//introspection TODO
 		
 		//meditation TODO
 	}
-	private void patch_doc_03() throws SQLException
+	private void patch_doc_03() throws java.sql.SQLException
 	{
 		//staggering blow 458 457
 		ReplaceField("enchantment", "duration", 2, 458);
 		ReplaceField("enchantment", "duration", 3, 457);
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {457,76,-30};
-			ReplaceField("enchantment_join_attribute", "modifier",-20, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(457,76,-30,-20);
 		
 		//ready stance
 		ReplaceField("skill","points",0, 60); //trivial to learn
@@ -413,18 +344,8 @@ public class Patcher {
 		ReplaceField("skill","stat_value", 3, 60); //requiremnt
 		ReplaceField("skill","stat_value", 9, 61); //requirement
 		
-		
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {172,76,10};
-			ReplaceField("enchantment_join_attribute", "modifier",15, colKeys, keys);
-		}
-		
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {173,76,20};
-			ReplaceField("enchantment_join_attribute", "modifier",45, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(172,76,10,15);
+		Replace_enchantment_join_attribute(173,76,20,45);
 		
 		//stimulus
 		ReplaceField("skill","stat_value", 6, 537); //requiremnt
@@ -435,11 +356,8 @@ public class Patcher {
 		//scout's advice
 		ReplaceField("enchantment", "duration", 2, 463);
 		ReplaceField("enchantment", "duration", 3, 464);
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {463,74,10};
-			ReplaceField("enchantment_join_attribute", "modifier", 15, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(463,74,10,15);
+		
 		
 		//deft stance
 		ReplaceField("skill","points",0, 58); //trivial to learn
@@ -451,35 +369,19 @@ public class Patcher {
 		
 		//safe stance
 		ReplaceField("skill","points", 2, 215); // easy to master
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {175,51,30};
-			ReplaceField("enchantment_join_attribute", "modifier", 45, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(175,51,30,45);
 		
 		//combat focus TODO (because I'll need to check wheter "only next action" skills have special field -which they probably do have-
 		
 		//jaw strike
 		//everything goes to 20 for 2 turns
 		ReplaceField("enchantment", "duration", 2, 443);
+		Replace_enchantment_join_attribute(443,28,15,20);
+		Replace_enchantment_join_attribute(443,65,15,20);
 		
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {443,28,15};
-			ReplaceField("enchantment_join_attribute", "modifier", 20, colKeys, keys);
-		}
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {443,65,15};
-			ReplaceField("enchantment_join_attribute", "modifier", 20, colKeys, keys);
-		}
-		
+				
 		ReplaceField("enchantment", "duration", 3, 444);
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {444,30,-40};
-			ReplaceField("enchantment_join_attribute", "modifier", -30, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(444,30,-40,-30);
 		
 		//hamstring
 		this.RemoveEntry_skill_perform_skill(13);
@@ -494,21 +396,13 @@ public class Patcher {
 		
 	}
 	
-	private void patch_doc_04() throws SQLException
+	private void patch_doc_04() throws java.sql.SQLException
 	{
 		//hand shot
 		ReplaceField("enchantment", "duration", 2, 492);
 		ReplaceField("enchantment", "duration", 3, 494);
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {494,33,-20};
-			ReplaceField("enchantment_join_attribute", "modifier", -15, colKeys, keys);
-		}
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {494,35,-20};
-			ReplaceField("enchantment_join_attribute", "modifier", -15, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(494,33,-20,-15);
+		Replace_enchantment_join_attribute(494,35,-20,-15);
 		
 		
 		//knee shot
@@ -528,11 +422,7 @@ public class Patcher {
 		ReplaceField("skill", "points", 2, 73); // easy to master
 		
 		/* NOTE : skill_enchantment for the mastery (skill 73) has ID 424 & 425 identical. entrenched is buggy ? */
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {546,35,10};
-			ReplaceField("enchantment_join_attribute", "modifier", 15, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(546,35,10,15);
 		
 		//nerve shot TODO
 		
@@ -547,7 +437,7 @@ public class Patcher {
 		ReplaceField("skill_attribute", "modifier",-40, 344);
 		ReplaceField("skill_attribute", "modifier",-10, 345);
 	}
-	private void patch_doc_05() throws SQLException
+	private void patch_doc_05() throws java.sql.SQLException
 	{
 		//blitz
 		ReplaceField("skill","points", 0,16 );
@@ -615,17 +505,13 @@ public class Patcher {
 			int keys[] = {638,33,30};
 			ReplaceField("enchantment_join_attribute", "fk_attribute_id", 36, colKeys, keys);
 		}
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {638,36,30};
-			ReplaceField("enchantment_join_attribute", "modifier", 20, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(638,36,30,20);
 		
 		//quick draw
 		ReplaceField("skill","points",2, 11); //easy to master
 	}
 	
-	private void patch_doc_06() throws SQLException
+	private void patch_doc_06() throws java.sql.SQLException
 	{
 		//nerves of steel
 		ReplaceField("skill","stat_value", 3, 38);
@@ -641,17 +527,10 @@ public class Patcher {
 		
 		//demoralize
 		ReplaceField("enchantment", "duration", 2, 422);
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {422,23,-5};
-			ReplaceField("enchantment_join_attribute", "modifier", -4, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(422,23,-5,-4);
+		Replace_enchantment_join_attribute(423,23,-10,-6);
 		ReplaceField("enchantment", "duration", 3, 423);
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {423,23,-10};
-			ReplaceField("enchantment_join_attribute", "modifier", -6, colKeys, keys);
-		}
+		
 		
 		//battle tongue
 		ReplaceField("skill", "points", 0, 166); //trivial to train
@@ -662,11 +541,8 @@ public class Patcher {
 		ReplaceField("enchantment", "duration", 2, 424);
 		
 		ReplaceField("enchantment", "duration", 3, 425);
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {425,75,20};
-			ReplaceField("enchantment_join_attribute", "modifier", 15, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(425,75,20,15);
+		
 		
 		//heroic presence TODO (not found)
 		
@@ -705,11 +581,7 @@ public class Patcher {
 		ReplaceField("skill", "stat_value", 6, 552);
 		ReplaceField("skill", "stat_value", 12, 553);
 		ReplaceField("skill", "points", 2, 553);
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {512,75,40};
-			ReplaceField("enchantment_join_attribute", "modifier", 60, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(512,75,40,60);
 		
 		//piety expert casting TODO spell casting
 
@@ -723,7 +595,7 @@ public class Patcher {
 		ReplaceField("skill_attribute", "modifier", 30, 333);
 		
 	}
-	private void patch_doc_07() throws SQLException
+	private void patch_doc_07() throws java.sql.SQLException
 	{
 		//sixth sense
 		ReplaceField("skill", "points", 0, 5);
@@ -756,7 +628,7 @@ public class Patcher {
 		//swift counter TODO instruction unclear
 		
 	}
-	private void patch_doc_08() throws SQLException
+	private void patch_doc_08() throws java.sql.SQLException
 	{
 		//overhead
 		ReplaceField("skill_attribute", "modifier", 10, 353);
@@ -772,17 +644,9 @@ public class Patcher {
 		
 		//sharpshooter
 		ReplaceField("enchantment", "duration", 2, 476);
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {476,37,2};
-			ReplaceField("enchantment_join_attribute", "modifier", 1, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(476,37,2,1);
 		ReplaceField("enchantment", "duration", 3, 477);
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {477,37,4};
-			ReplaceField("enchantment_join_attribute", "modifier", 2, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(477,37,4,2);
 		
 		//quick incision
 		//to range resistance
@@ -798,11 +662,7 @@ public class Patcher {
 			int keys[] = {452,75,-6};
 			ReplaceField("enchantment_join_attribute", "fk_attribute_id", 74, colKeys, keys);
 		}
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {452,74,-6};
-			ReplaceField("enchantment_join_attribute", "modifier", -4, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(452,74,-6,-4);
 		
 		//weak spot
 		ReplaceField("skill_attribute", "modifier", -10, 51);
@@ -811,33 +671,15 @@ public class Patcher {
 		
 		//fatality : increase both melee & ranged crit (but only proc on melee damage)
 		ReplaceField("enchantment", "duration", 2, 455);
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {455,36,5};
-			ReplaceField("enchantment_join_attribute", "modifier", 3, colKeys, keys);
-			keys[1] = 37;
-			ReplaceField("enchantment_join_attribute", "modifier", 3, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(455,36,5,3);
+		Replace_enchantment_join_attribute(455,37,5,3);
 		ReplaceField("enchantment", "duration", 3, 456);
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {456,36,10};
-			ReplaceField("enchantment_join_attribute", "modifier", 4, colKeys, keys);
-			keys[1] = 37;
-			ReplaceField("enchantment_join_attribute", "modifier", 4, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(456,36,10,4);
+		Replace_enchantment_join_attribute(456,37,10,4);
 		
 		//underdog
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {552,36,8};
-			ReplaceField("enchantment_join_attribute", "modifier", 10, colKeys, keys);
-		}
-		{
-			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-			int keys[] = {553,36,15};
-			ReplaceField("enchantment_join_attribute", "modifier", 20, colKeys, keys);
-		}
+		Replace_enchantment_join_attribute(552,36,8,10);
+		Replace_enchantment_join_attribute(553,36,15,20);
 		
 		//break defense TODO not found
 		
@@ -845,7 +687,7 @@ public class Patcher {
 		
 	}
 	
-	private void patch_doc_09() throws SQLException
+	private void patch_doc_09() throws java.sql.SQLException
 	{
 		
 	}
