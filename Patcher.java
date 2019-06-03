@@ -12,15 +12,18 @@ public class Patcher {
 	public Patcher() throws SQLException
 	{
 		this.conn  = Common.Connect(dbPath);
-		//try {
-			this.patch_doc_00();
-			this.patch_doc_01();
-			this.patch_doc_02();
-			this.patch_doc_03();
-			this.patch_doc_04();
-		/*} catch (SQLException e) {
-			e.printStackTrace();
-		}*/
+
+		this.patch_doc_00();
+		this.patch_doc_01();
+		this.patch_doc_02();
+		this.patch_doc_03();
+		this.patch_doc_04();
+		this.patch_doc_05();
+		this.patch_doc_06();
+		this.patch_doc_07();
+		this.patch_doc_08();
+		this.patch_doc_09();
+		
 		this.conn.close();
 	}
 	private void ReplaceField(String tableName, String columnName, int value, int key) throws SQLException
@@ -33,11 +36,6 @@ public class Patcher {
 	}
 	private void ReplaceField(String tableName, String colunmName, int value, String []keyCols, int[] key) throws SQLException
 	{
-		//ContentValues cv = new ContentValues();
-		//cv.put(ColumnName, newValue);
-		
-		//String sql = "UPDATE "+TABLE_NAME +" SET " + ColumnName+ " = '"+newValue+"' WHERE "+Column+ " = "+rowId;
-		
 		String sql = "UPDATE " + tableName + " SET " + colunmName + " = ? WHERE";
 		for(int index = 0; index < keyCols.length; index++)
 		{
@@ -46,8 +44,6 @@ public class Patcher {
 				sql += " AND";
 		}
 		PreparedStatement pstmt = conn.prepareStatement(sql) ;
-        // set the corresponding param
-        //pstmt.setString(1, tableName);
 		int idx = 1;
         pstmt.setInt(idx, value);
         for(int index = 0; index < keyCols.length; index++)
@@ -55,9 +51,6 @@ public class Patcher {
         	idx++;
         	pstmt.setInt(idx, key[index]);	
         }
-        
-        
-        // update 
         pstmt.executeUpdate();		
 	}
 	private void AddEntry_enchantment_join_attribute(int fk_ench_id, int fk_attr_id, int modifier) throws SQLException {
@@ -236,8 +229,7 @@ public class Patcher {
 		ReplaceField("skill","points", 2,2); //easy to master
 		//TODO -30%
 		
-		//careful approach
-		//TODO
+		//careful approach TODO
 		
 		//prowl
 		ReplaceField("skill","points", 2,360); //easy to master
@@ -362,12 +354,9 @@ public class Patcher {
 		ReplaceField("enchantment", "duration", 2, 438);
 		ReplaceField("enchantment", "duration", 3, 439);
 		
-		//Wild casting
+		//Wild casting TODO
 		
-		//TODO
-		
-		//quick casting
-		//TODO
+		//quick casting TODO
 		
 		//exploit positioning
 		ReplaceField("enchantment", "duration", 2, 436);
@@ -403,11 +392,9 @@ public class Patcher {
 			ReplaceField("enchantment_join_attribute", "modifier",15, colKeys, keys);
 		}
 		
-		//introspection 
-		//TODO
+		//introspection TODO
 		
-		//meditation
-		//TODO
+		//meditation TODO
 	}
 	private void patch_doc_03() throws SQLException
 	{
@@ -470,8 +457,7 @@ public class Patcher {
 			ReplaceField("enchantment_join_attribute", "modifier", 45, colKeys, keys);
 		}
 		
-		//combat focus : 
-		//TODO (because I'll need to check wheter "only next action" skills have special field -which they probably do have-
+		//combat focus TODO (because I'll need to check wheter "only next action" skills have special field -which they probably do have-
 		
 		//jaw strike
 		//everything goes to 20 for 2 turns
@@ -541,31 +527,327 @@ public class Patcher {
 		ReplaceField("skill", "points", 0, 72); //trivial to learn
 		ReplaceField("skill", "points", 2, 73); // easy to master
 		
-		/* NOTE : skill_enchantment has ID 424 & 425 identical. entrenched is buggy ? */
+		/* NOTE : skill_enchantment for the mastery (skill 73) has ID 424 & 425 identical. entrenched is buggy ? */
 		{
 			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
 			int keys[] = {546,35,10};
 			ReplaceField("enchantment_join_attribute", "modifier", 15, colKeys, keys);
 		}
 		
-		//nerve shot
+		//nerve shot TODO
 		
-		//TODO
-		
-		//feint
-		
-		//TODO (can't find it)
+		//feint TODO (can't find it)
 		
 		//precise strike
 		ReplaceField("skill","points", 2, 264);
 		
-		//armor break
-		
-		//TODO can't find it
+		//armor break TODO can't find it
 		
 		//head shot
 		ReplaceField("skill_attribute", "modifier",-40, 344);
 		ReplaceField("skill_attribute", "modifier",-10, 345);
+	}
+	private void patch_doc_05() throws SQLException
+	{
+		//blitz
+		ReplaceField("skill","points", 0,16 );
+		ReplaceField("skill","points", 2, 17);
+		
+		//bull charge
+		ReplaceField("skill","points", 0,18 );
+		ReplaceField("skill","points", 2, 19);
+		
+		//strider
+		ReplaceField("skill","points", 2, 350);
+		
+		//surprise
+		ReplaceField("skill","stat_value", 6, 134);
+		ReplaceField("skill","stat_value", 12, 135);
+		ReplaceField("skill","points", 2, 135);
+		
+		//armor proficient
+		ReplaceField("skill","stat_value", 9, 563);
+		ReplaceField("skill","stat_value", 15, 564);
+		
+		//thougness
+		ReplaceField("skill_attribute", "modifier", 20, 95);
+		ReplaceField("skill_attribute", "modifier", 60, 96);
+		
+		//veteran
+		ReplaceField("skill","stat_value", 3, 26);
+		ReplaceField("skill","stat_value", 9, 27);
+		ReplaceField("skill","points", 0, 26);
+		ReplaceField("skill","points", 2, 27);
+		//TODO major revision
+		
+		//quick recovery
+		ReplaceField("skill", "points", 0, 24);
+		ReplaceField("skill", "points", 2, 25);
+
+		//unstoppable
+		ReplaceField("skill","stat_value", 6, 529);
+		ReplaceField("skill","stat_value", 12, 530);
+		ReplaceField("skill_attribute", "modifier", 30, 302);
+		
+		//hardy
+		ReplaceField("skill_attribute", "modifier", 60, 154);
+		//resilient
+		ReplaceField("skill_attribute", "modifier", 30, 304);
+		
+		//ambuscade
+		ReplaceField("skill", "points", 2, 239); //easy to master
+		ReplaceField("skill_attribute", "modifier", 30, 112); 
+		
+		//athletic expert TODO (not found)
+		
+		//acrobatic
+		ReplaceField("skill", "points", 0, 7);
+		ReplaceField("skill", "points", 2, 9);
+		
+		//counterblow
+		{
+			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
+			int keys[] = {637,33,10};
+			ReplaceField("enchantment_join_attribute", "fk_attribute_id", 36, colKeys, keys);
+		}
+		{
+			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
+			int keys[] = {638,33,30};
+			ReplaceField("enchantment_join_attribute", "fk_attribute_id", 36, colKeys, keys);
+		}
+		{
+			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
+			int keys[] = {638,36,30};
+			ReplaceField("enchantment_join_attribute", "modifier", 20, colKeys, keys);
+		}
+		
+		//quick draw
+		ReplaceField("skill","points",2, 11); //easy to master
+	}
+	
+	private void patch_doc_06() throws SQLException
+	{
+		//nerves of steel
+		ReplaceField("skill","stat_value", 3, 38);
+		ReplaceField("skill","stat_value", 9, 39);
+		
+		//commander
+		ReplaceField("skill_attribute", "modifier",8,25);
+		ReplaceField("skill_attribute", "modifier",16,26);
+		
+		//inspiring
+		ReplaceField("skill_attribute", "modifier",4,99);
+		ReplaceField("skill_attribute", "modifier",12,100);
+		
+		//demoralize
+		ReplaceField("enchantment", "duration", 2, 422);
+		{
+			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
+			int keys[] = {422,23,-5};
+			ReplaceField("enchantment_join_attribute", "modifier", -4, colKeys, keys);
+		}
+		ReplaceField("enchantment", "duration", 3, 423);
+		{
+			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
+			int keys[] = {423,23,-10};
+			ReplaceField("enchantment_join_attribute", "modifier", -6, colKeys, keys);
+		}
+		
+		//battle tongue
+		ReplaceField("skill", "points", 0, 166); //trivial to train
+		
+		ReplaceField("skill_attribute", "modifier", 60, 358);
+		
+		//serenity
+		ReplaceField("enchantment", "duration", 2, 424);
+		
+		ReplaceField("enchantment", "duration", 3, 425);
+		{
+			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
+			int keys[] = {425,75,20};
+			ReplaceField("enchantment_join_attribute", "modifier", 15, colKeys, keys);
+		}
+		
+		//heroic presence TODO (not found)
+		
+		//devotion channeling TODO spell casting
+		
+		//tracker
+		ReplaceField("skill", "points", 0, 375);
+		ReplaceField("skill", "points", 2, 376);
+		ReplaceField("skill", "stat_value", 3, 375);
+		ReplaceField("skill", "stat_value", 9, 376);
+		//TODO
+		
+		//resist corruption
+		ReplaceField("skill", "points", 0, 202);
+		ReplaceField("skill", "points", 2, 203);
+		ReplaceField("skill", "stat_value", 3,202);
+		ReplaceField("skill", "stat_value", 9, 203);
+		
+		ReplaceField("skill_attribute", "modifier", 20, 103);
+		ReplaceField("skill_attribute", "modifier", 60, 104);
+		
+		
+		//divine & arcane study
+		ReplaceField("skill", "points", 0, 531);
+		ReplaceField("skill", "points", 2, 532);
+		ReplaceField("skill", "points", 0, 533);
+		ReplaceField("skill", "points", 2, 534);
+
+		//resist magic
+		ReplaceField("skill", "stat_value", 6, 200);
+		ReplaceField("skill", "stat_value", 12, 201);
+		ReplaceField("skill_attribute", "modifier", 20, 101);
+		ReplaceField("skill_attribute", "modifier", 40, 102);
+		
+		//knowledge : ambush
+		ReplaceField("skill", "stat_value", 6, 552);
+		ReplaceField("skill", "stat_value", 12, 553);
+		ReplaceField("skill", "points", 2, 553);
+		{
+			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
+			int keys[] = {512,75,40};
+			ReplaceField("enchantment_join_attribute", "modifier", 60, colKeys, keys);
+		}
+		
+		//piety expert casting TODO spell casting
+
+		//knowledge tactic
+		ReplaceField("skill", "stat_value", 9, 206);
+		ReplaceField("skill", "stat_value", 15, 207);
+		
+		ReplaceField("skill_attribute", "modifier", 10, 330);
+		ReplaceField("skill_attribute", "modifier", 10, 331);
+		ReplaceField("skill_attribute", "modifier", 30, 332);
+		ReplaceField("skill_attribute", "modifier", 30, 333);
+		
+	}
+	private void patch_doc_07() throws SQLException
+	{
+		//sixth sense
+		ReplaceField("skill", "points", 0, 5);
+		ReplaceField("skill", "points", 2, 6);
+		
+		//TODO remove cost & change stats ?
+		
+		//vigilance
+		ReplaceField("skill", "points", 2, 229);
+		ReplaceField("skill_attribute", "modifier", 20, 109);
+		ReplaceField("skill_attribute", "modifier", 60, 110);
+		
+		//combat movement
+		ReplaceField("skill", "points", 2, 63);
+		
+		//concealement
+		ReplaceField("skill_attribute","modifier", 10  ,65);
+		ReplaceField("skill_attribute", "modifier",20 ,66);
+		
+		//nimble TODO (the spec says to decrease the stats...wtf ?
+		
+		
+		//flash parry
+		ReplaceField("skill_attribute", "modifier", 30, 114);
+		
+		//shield specialist TODO 
+		
+		//retaliation TODO instruction unclear
+		
+		//swift counter TODO instruction unclear
+		
+	}
+	private void patch_doc_08() throws SQLException
+	{
+		//overhead
+		ReplaceField("skill_attribute", "modifier", 10, 353);
+		ReplaceField("skill_attribute", "modifier", 20, 354);
+		
+		//bulls eye
+		ReplaceField("skill", "stat_value", 6, 255);
+		ReplaceField("skill", "stat_value", 12, 256);
+		
+		//quick reload
+		ReplaceField("skill", "stat_value", 9, 76);
+		ReplaceField("skill", "stat_value", 15, 77);
+		
+		//sharpshooter
+		ReplaceField("enchantment", "duration", 2, 476);
+		{
+			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
+			int keys[] = {476,37,2};
+			ReplaceField("enchantment_join_attribute", "modifier", 1, colKeys, keys);
+		}
+		ReplaceField("enchantment", "duration", 3, 477);
+		{
+			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
+			int keys[] = {477,37,4};
+			ReplaceField("enchantment_join_attribute", "modifier", 2, colKeys, keys);
+		}
+		
+		//quick incision
+		//to range resistance
+		{
+			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
+			int keys[] = {451,75,-3};
+			ReplaceField("enchantment_join_attribute", "fk_attribute_id", 74, colKeys, keys);
+		}
+		ReplaceField("enchantment", "duration", 2, 451);
+		ReplaceField("enchantment", "duration", 3, 452);
+		{
+			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
+			int keys[] = {452,75,-6};
+			ReplaceField("enchantment_join_attribute", "fk_attribute_id", 74, colKeys, keys);
+		}
+		{
+			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
+			int keys[] = {452,74,-6};
+			ReplaceField("enchantment_join_attribute", "modifier", -4, colKeys, keys);
+		}
+		
+		//weak spot
+		ReplaceField("skill_attribute", "modifier", -10, 51);
+		ReplaceField("skill_attribute", "modifier", -10, 52);
+		ReplaceField("skill","points", 2, 85); // easy to master
+		
+		//fatality : increase both melee & ranged crit (but only proc on melee damage)
+		ReplaceField("enchantment", "duration", 2, 455);
+		{
+			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
+			int keys[] = {455,36,5};
+			ReplaceField("enchantment_join_attribute", "modifier", 3, colKeys, keys);
+			keys[1] = 37;
+			ReplaceField("enchantment_join_attribute", "modifier", 3, colKeys, keys);
+		}
+		ReplaceField("enchantment", "duration", 3, 456);
+		{
+			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
+			int keys[] = {456,36,10};
+			ReplaceField("enchantment_join_attribute", "modifier", 4, colKeys, keys);
+			keys[1] = 37;
+			ReplaceField("enchantment_join_attribute", "modifier", 4, colKeys, keys);
+		}
+		
+		//underdog
+		{
+			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
+			int keys[] = {552,36,8};
+			ReplaceField("enchantment_join_attribute", "modifier", 10, colKeys, keys);
+		}
+		{
+			String colKeys[] = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
+			int keys[] = {553,36,15};
+			ReplaceField("enchantment_join_attribute", "modifier", 20, colKeys, keys);
+		}
+		
+		//break defense TODO not found
+		
+		
+		
+	}
+	
+	private void patch_doc_09() throws SQLException
+	{
+		
 	}
 	public static void main(String []args)
 	{
