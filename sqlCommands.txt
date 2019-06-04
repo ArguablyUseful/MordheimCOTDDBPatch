@@ -1,0 +1,256 @@
+UPDATE enchantment SET duration = 3 WHERE id = 219
+INSERT INTO enchantment_join_attribute(fk_enchantment_id,fk_attribute_id, modifier) VALUES(219,74,15)
+UPDATE attribute SET base_roll = 40 WHERE id = 16
+UPDATE attribute SET base_roll = 30 WHERE id = 109
+UPDATE attribute SET base_roll = 20 WHERE id = 110
+UPDATE attribute SET base_roll = 30 WHERE id = 17
+UPDATE attribute SET base_roll = 40 WHERE id = 18
+UPDATE attribute SET base_roll = 30 WHERE id = 111
+UPDATE attribute SET base_roll = 20 WHERE id = 112
+UPDATE enchantment_effect_enchantment SET fk_enchantment_trigger_id = 0 WHERE id = 216
+UPDATE enchantment_effect_enchantment SET fk_enchantment_trigger_id = 0 WHERE id = 217
+UPDATE enchantment_effect_enchantment SET fk_enchantment_trigger_id = 0 WHERE id = 218
+UPDATE enchantment SET duration = 3 WHERE id = 1069
+DELETE FROM attribute_attribute WHERE ID = 26
+INSERT INTO attribute_attribute (id, fk_attribute_id, fk_attribute_id_base, modifier) VALUES(26,75,14,1)
+UPDATE attribute_attribute SET modifier = 5 WHERE fk_attribute_id_base = 2 AND fk_attribute_id = 40
+DELETE FROM attribute_attribute WHERE ID = 24
+INSERT INTO attribute_attribute (id, fk_attribute_id, fk_attribute_id_base, modifier) VALUES(24,74,10,1)
+UPDATE skill_attribute SET modifier = -20 WHERE id = 91 AND fk_skill_id = 138
+UPDATE skill SET points = 2 WHERE id = 131
+UPDATE skill_attribute SET modifier = 30 WHERE id = 81 AND fk_skill_id = 131
+UPDATE skill_attribute SET modifier = 25 WHERE id = 340 AND fk_skill_id = 541
+UPDATE skill SET points = 0 WHERE id = 547
+UPDATE enchantment SET duration = 2 WHERE id = 489
+UPDATE enchantment SET damage_min = 5 WHERE id = 491
+UPDATE enchantment SET damage_max = 5 WHERE id = 491
+UPDATE skill SET points = 2 WHERE id = 548
+UPDATE enchantment SET duration = 3 WHERE id = 490
+UPDATE skill SET stat_value = 3 WHERE id = 345
+UPDATE skill SET stat_value = 9 WHERE id = 346
+UPDATE skill SET stat_value = 6 WHERE id = 14
+UPDATE skill SET stat_value = 12 WHERE id = 15
+UPDATE enchantment_join_attribute SET modifier = 15 WHERE fk_enchantment_id = 118 AND fk_attribute_id = 53 AND modifier = 5
+UPDATE enchantment_join_attribute SET modifier = 30 WHERE fk_enchantment_id = 119 AND fk_attribute_id = 53 AND modifier = 10
+UPDATE skill SET stat_value = 6 WHERE id = 20
+UPDATE skill SET stat_value = 12 WHERE id = 21
+UPDATE enchantment SET duration = 2 WHERE id = 478
+UPDATE enchantment SET damage_min = 10 WHERE id = 480
+UPDATE enchantment SET damage_max = 10 WHERE id = 480
+UPDATE enchantment_join_attribute SET modifier = 5 WHERE fk_enchantment_id = 478 AND fk_attribute_id = 130 AND modifier = 10
+UPDATE enchantment SET duration = 3 WHERE id = 479
+UPDATE enchantment SET damage_min = 10 WHERE id = 811
+UPDATE enchantment SET damage_max = 10 WHERE id = 811
+UPDATE skill SET stat_value = 9 WHERE id = 146
+UPDATE skill SET stat_value = 15 WHERE id = 147
+UPDATE skill SET stat_value = 9 WHERE id = 351
+UPDATE skill SET stat_value = 15 WHERE id = 352
+UPDATE skill SET points = 0 WHERE id = 357
+UPDATE skill SET points = 2 WHERE id = 358
+UPDATE skill SET points = 0 WHERE id = 3
+UPDATE skill SET points = 2 WHERE id = 4
+UPDATE skill SET points = 2 WHERE id = 2
+UPDATE skill SET points = 2 WHERE id = 360
+UPDATE skill SET strategy_points = 1 WHERE id = 360
+UPDATE skill SET offense_points = 2 WHERE id = 360
+UPDATE enchantment SET duration = 2 WHERE id = 123
+UPDATE enchantment SET duration = 3 WHERE id = 124
+UPDATE enchantment SET duration = 3 WHERE id = 420
+UPDATE enchantment SET duration = 2 WHERE id = 277
+UPDATE enchantment SET duration = 3 WHERE id = 279
+UPDATE skill SET points = 0 WHERE id = 36
+UPDATE skill SET points = 2 WHERE id = 37
+UPDATE enchantment_join_attribute SET modifier = -5 WHERE fk_enchantment_id = 509 AND fk_attribute_id = 114 AND modifier = -10
+UPDATE enchantment_join_attribute SET modifier = -35 WHERE fk_enchantment_id = 510 AND fk_attribute_id = 114 AND modifier = -25
+UPDATE enchantment SET duration = 1 WHERE id = 418
+UPDATE enchantment_join_attribute SET modifier = 10 WHERE fk_enchantment_id = 418 AND fk_attribute_id = 76 AND modifier = 5
+UPDATE enchantment SET duration = 3 WHERE id = 419
+UPDATE enchantment_join_attribute SET modifier = 20 WHERE fk_enchantment_id = 419 AND fk_attribute_id = 76 AND modifier = 10
+UPDATE skill SET points = 0 WHERE id = 305
+UPDATE skill SET points = 2 WHERE id = 306
+UPDATE enchantment SET duration = 1 WHERE id = 125
+UPDATE enchantment SET duration = 2 WHERE id = 687
+UPDATE enchantment_join_attribute SET modifier = 10 WHERE fk_enchantment_id = 687 AND fk_attribute_id = 40 AND modifier = 5
+UPDATE enchantment_join_attribute SET modifier = 10 WHERE fk_enchantment_id = 687 AND fk_attribute_id = 41 AND modifier = 5
+UPDATE enchantment SET duration = 3 WHERE id = 688
+UPDATE enchantment_join_attribute SET modifier = 15 WHERE fk_enchantment_id = 688 AND fk_attribute_id = 40 AND modifier = 10
+UPDATE enchantment_join_attribute SET modifier = 15 WHERE fk_enchantment_id = 688 AND fk_attribute_id = 41 AND modifier = 10
+UPDATE enchantment SET duration = 2 WHERE id = 802
+UPDATE enchantment SET duration = 3 WHERE id = 803
+UPDATE enchantment_join_attribute SET modifier = -15 WHERE fk_enchantment_id = 803 AND fk_attribute_id = 75 AND modifier = -20
+UPDATE enchantment_join_attribute SET modifier = -5 WHERE fk_enchantment_id = 536 AND fk_attribute_id = 114 AND modifier = 5
+UPDATE skill SET points = 0 WHERE id = 158
+UPDATE skill SET points = 2 WHERE id = 159
+UPDATE enchantment SET duration = 2 WHERE id = 168
+UPDATE enchantment_join_attribute SET modifier = 5 WHERE fk_enchantment_id = 168 AND fk_attribute_id = 61 AND modifier = 10
+UPDATE enchantment SET duration = 3 WHERE id = 169
+UPDATE enchantment_join_attribute SET modifier = 10 WHERE fk_enchantment_id = 169 AND fk_attribute_id = 61 AND modifier = 20
+UPDATE enchantment SET duration = 2 WHERE id = 438
+UPDATE enchantment SET duration = 3 WHERE id = 439
+UPDATE enchantment SET duration = 2 WHERE id = 436
+UPDATE enchantment_join_attribute SET fk_attribute_id = 75 WHERE fk_enchantment_id = 436 AND fk_attribute_id = 74 AND modifier = -10
+UPDATE enchantment SET duration = 3 WHERE id = 437
+UPDATE enchantment_join_attribute SET fk_attribute_id = 75 WHERE fk_enchantment_id = 437 AND fk_attribute_id = 74 AND modifier = -20
+UPDATE enchantment_join_attribute SET modifier = -15 WHERE fk_enchantment_id = 437 AND fk_attribute_id = 75 AND modifier = -20
+UPDATE enchantment SET duration = 2 WHERE id = 180
+UPDATE enchantment SET duration = 3 WHERE id = 181
+UPDATE enchantment_join_attribute SET modifier = 15 WHERE fk_enchantment_id = 181 AND fk_attribute_id = 40 AND modifier = 20
+UPDATE enchantment_join_attribute SET modifier = 15 WHERE fk_enchantment_id = 181 AND fk_attribute_id = 41 AND modifier = 20
+UPDATE enchantment SET duration = 2 WHERE id = 458
+UPDATE enchantment SET duration = 3 WHERE id = 457
+UPDATE enchantment_join_attribute SET modifier = -20 WHERE fk_enchantment_id = 457 AND fk_attribute_id = 76 AND modifier = -30
+UPDATE skill SET points = 0 WHERE id = 60
+UPDATE skill SET points = 2 WHERE id = 61
+UPDATE skill SET stat_value = 3 WHERE id = 60
+UPDATE skill SET stat_value = 9 WHERE id = 61
+UPDATE enchantment_join_attribute SET modifier = 15 WHERE fk_enchantment_id = 172 AND fk_attribute_id = 76 AND modifier = 10
+UPDATE enchantment_join_attribute SET modifier = 45 WHERE fk_enchantment_id = 173 AND fk_attribute_id = 76 AND modifier = 20
+UPDATE skill SET stat_value = 6 WHERE id = 537
+UPDATE skill SET stat_value = 12 WHERE id = 538
+UPDATE enchantment SET duration = 2 WHERE id = 461
+UPDATE enchantment SET duration = 3 WHERE id = 462
+UPDATE enchantment SET duration = 2 WHERE id = 463
+UPDATE enchantment SET duration = 3 WHERE id = 464
+UPDATE enchantment_join_attribute SET modifier = 15 WHERE fk_enchantment_id = 463 AND fk_attribute_id = 74 AND modifier = 10
+UPDATE skill SET points = 0 WHERE id = 58
+UPDATE skill SET points = 2 WHERE id = 59
+INSERT INTO enchantment_join_attribute(fk_enchantment_id,fk_attribute_id, modifier) VALUES(170,76,-20)
+INSERT INTO enchantment_join_attribute(fk_enchantment_id,fk_attribute_id, modifier) VALUES(171,76,-40)
+UPDATE skill SET points = 2 WHERE id = 215
+UPDATE enchantment_join_attribute SET modifier = 45 WHERE fk_enchantment_id = 175 AND fk_attribute_id = 51 AND modifier = 30
+UPDATE enchantment SET duration = 2 WHERE id = 443
+UPDATE enchantment_join_attribute SET modifier = 20 WHERE fk_enchantment_id = 443 AND fk_attribute_id = 28 AND modifier = 15
+UPDATE enchantment_join_attribute SET modifier = 20 WHERE fk_enchantment_id = 443 AND fk_attribute_id = 65 AND modifier = 15
+UPDATE enchantment SET duration = 3 WHERE id = 444
+UPDATE enchantment_join_attribute SET modifier = -30 WHERE fk_enchantment_id = 444 AND fk_attribute_id = 30 AND modifier = -40
+DELETE FROM skill_perform_skill WHERE ID = 13
+DELETE FROM skill_perform_skill WHERE ID = 14
+UPDATE enchantment SET duration = 2 WHERE id = 527
+UPDATE enchantment SET duration = 3 WHERE id = 528
+UPDATE skill SET strategy_points = 1 WHERE id = 560
+UPDATE skill SET offense_points = 2 WHERE id = 560
+UPDATE skill SET points = 2 WHERE id = 560
+UPDATE enchantment SET duration = 2 WHERE id = 492
+UPDATE enchantment SET duration = 3 WHERE id = 494
+UPDATE enchantment_join_attribute SET modifier = -15 WHERE fk_enchantment_id = 494 AND fk_attribute_id = 33 AND modifier = -20
+UPDATE enchantment_join_attribute SET modifier = -15 WHERE fk_enchantment_id = 494 AND fk_attribute_id = 35 AND modifier = -20
+UPDATE enchantment SET duration = 2 WHERE id = 128
+UPDATE enchantment SET duration = 3 WHERE id = 129
+UPDATE enchantment SET duration = 2 WHERE id = 500
+UPDATE enchantment SET duration = 3 WHERE id = 501
+UPDATE enchantment SET duration = 3 WHERE id = 499
+UPDATE skill SET points = 0 WHERE id = 72
+UPDATE skill SET points = 2 WHERE id = 73
+UPDATE enchantment_join_attribute SET modifier = 15 WHERE fk_enchantment_id = 546 AND fk_attribute_id = 35 AND modifier = 10
+UPDATE skill SET points = 2 WHERE id = 264
+UPDATE skill_attribute SET modifier = -40 WHERE id = 344
+UPDATE skill_attribute SET modifier = -10 WHERE id = 345
+UPDATE skill SET points = 0 WHERE id = 16
+UPDATE skill SET points = 2 WHERE id = 17
+UPDATE skill SET points = 0 WHERE id = 18
+UPDATE skill SET points = 2 WHERE id = 19
+UPDATE skill SET points = 2 WHERE id = 350
+UPDATE skill SET stat_value = 6 WHERE id = 134
+UPDATE skill SET stat_value = 12 WHERE id = 135
+UPDATE skill SET points = 2 WHERE id = 135
+UPDATE skill SET stat_value = 9 WHERE id = 563
+UPDATE skill SET stat_value = 15 WHERE id = 564
+UPDATE skill_attribute SET modifier = 20 WHERE id = 95
+UPDATE skill_attribute SET modifier = 60 WHERE id = 96
+UPDATE skill SET stat_value = 3 WHERE id = 26
+UPDATE skill SET stat_value = 9 WHERE id = 27
+UPDATE skill SET points = 0 WHERE id = 26
+UPDATE skill SET points = 2 WHERE id = 27
+UPDATE skill SET points = 0 WHERE id = 24
+UPDATE skill SET points = 2 WHERE id = 25
+UPDATE skill SET stat_value = 6 WHERE id = 529
+UPDATE skill SET stat_value = 12 WHERE id = 530
+UPDATE skill_attribute SET modifier = 30 WHERE id = 302
+UPDATE skill_attribute SET modifier = 60 WHERE id = 154
+UPDATE skill_attribute SET modifier = 30 WHERE id = 304
+UPDATE skill SET points = 2 WHERE id = 239
+UPDATE skill_attribute SET modifier = 30 WHERE id = 112
+UPDATE skill SET points = 0 WHERE id = 7
+UPDATE skill SET points = 2 WHERE id = 9
+UPDATE enchantment_join_attribute SET fk_attribute_id = 36 WHERE fk_enchantment_id = 637 AND fk_attribute_id = 33 AND modifier = 10
+UPDATE enchantment_join_attribute SET fk_attribute_id = 36 WHERE fk_enchantment_id = 638 AND fk_attribute_id = 33 AND modifier = 30
+UPDATE enchantment_join_attribute SET modifier = 20 WHERE fk_enchantment_id = 638 AND fk_attribute_id = 36 AND modifier = 30
+UPDATE skill SET points = 2 WHERE id = 11
+UPDATE skill SET stat_value = 3 WHERE id = 38
+UPDATE skill SET stat_value = 9 WHERE id = 39
+UPDATE skill_attribute SET modifier = 8 WHERE id = 25
+UPDATE skill_attribute SET modifier = 16 WHERE id = 26
+UPDATE skill_attribute SET modifier = 4 WHERE id = 99
+UPDATE skill_attribute SET modifier = 12 WHERE id = 100
+UPDATE enchantment SET duration = 2 WHERE id = 422
+UPDATE enchantment_join_attribute SET modifier = -4 WHERE fk_enchantment_id = 422 AND fk_attribute_id = 23 AND modifier = -5
+UPDATE enchantment_join_attribute SET modifier = -6 WHERE fk_enchantment_id = 423 AND fk_attribute_id = 23 AND modifier = -10
+UPDATE enchantment SET duration = 3 WHERE id = 423
+UPDATE skill SET points = 0 WHERE id = 166
+UPDATE skill_attribute SET modifier = 60 WHERE id = 358
+UPDATE enchantment SET duration = 2 WHERE id = 424
+UPDATE enchantment SET duration = 3 WHERE id = 425
+UPDATE enchantment_join_attribute SET modifier = 15 WHERE fk_enchantment_id = 425 AND fk_attribute_id = 75 AND modifier = 20
+UPDATE skill SET points = 0 WHERE id = 375
+UPDATE skill SET points = 2 WHERE id = 376
+UPDATE skill SET stat_value = 3 WHERE id = 375
+UPDATE skill SET stat_value = 9 WHERE id = 376
+UPDATE skill SET points = 0 WHERE id = 202
+UPDATE skill SET points = 2 WHERE id = 203
+UPDATE skill SET stat_value = 3 WHERE id = 202
+UPDATE skill SET stat_value = 9 WHERE id = 203
+UPDATE skill_attribute SET modifier = 20 WHERE id = 103
+UPDATE skill_attribute SET modifier = 60 WHERE id = 104
+UPDATE skill SET points = 0 WHERE id = 531
+UPDATE skill SET points = 2 WHERE id = 532
+UPDATE skill SET points = 0 WHERE id = 533
+UPDATE skill SET points = 2 WHERE id = 534
+UPDATE skill SET stat_value = 6 WHERE id = 200
+UPDATE skill SET stat_value = 12 WHERE id = 201
+UPDATE skill_attribute SET modifier = 20 WHERE id = 101
+UPDATE skill_attribute SET modifier = 40 WHERE id = 102
+UPDATE skill SET stat_value = 6 WHERE id = 552
+UPDATE skill SET stat_value = 12 WHERE id = 553
+UPDATE skill SET points = 2 WHERE id = 553
+UPDATE enchantment_join_attribute SET modifier = 60 WHERE fk_enchantment_id = 512 AND fk_attribute_id = 75 AND modifier = 40
+UPDATE skill SET stat_value = 9 WHERE id = 206
+UPDATE skill SET stat_value = 15 WHERE id = 207
+UPDATE skill_attribute SET modifier = 10 WHERE id = 330
+UPDATE skill_attribute SET modifier = 10 WHERE id = 331
+UPDATE skill_attribute SET modifier = 30 WHERE id = 332
+UPDATE skill_attribute SET modifier = 30 WHERE id = 333
+UPDATE skill SET points = 0 WHERE id = 5
+UPDATE skill SET points = 2 WHERE id = 6
+UPDATE skill SET points = 2 WHERE id = 229
+UPDATE skill_attribute SET modifier = 20 WHERE id = 109
+UPDATE skill_attribute SET modifier = 60 WHERE id = 110
+UPDATE skill SET points = 2 WHERE id = 63
+UPDATE skill_attribute SET modifier = 10 WHERE id = 65
+UPDATE skill_attribute SET modifier = 20 WHERE id = 66
+UPDATE skill_attribute SET modifier = 30 WHERE id = 114
+UPDATE skill_attribute SET modifier = 10 WHERE id = 353
+UPDATE skill_attribute SET modifier = 20 WHERE id = 354
+UPDATE skill SET stat_value = 6 WHERE id = 255
+UPDATE skill SET stat_value = 12 WHERE id = 256
+UPDATE skill SET stat_value = 9 WHERE id = 76
+UPDATE skill SET stat_value = 15 WHERE id = 77
+UPDATE enchantment SET duration = 2 WHERE id = 476
+UPDATE enchantment_join_attribute SET modifier = 1 WHERE fk_enchantment_id = 476 AND fk_attribute_id = 37 AND modifier = 2
+UPDATE enchantment SET duration = 3 WHERE id = 477
+UPDATE enchantment_join_attribute SET modifier = 2 WHERE fk_enchantment_id = 477 AND fk_attribute_id = 37 AND modifier = 4
+UPDATE enchantment_join_attribute SET fk_attribute_id = 74 WHERE fk_enchantment_id = 451 AND fk_attribute_id = 75 AND modifier = -3
+UPDATE enchantment SET duration = 2 WHERE id = 451
+UPDATE enchantment SET duration = 3 WHERE id = 452
+UPDATE enchantment_join_attribute SET fk_attribute_id = 74 WHERE fk_enchantment_id = 452 AND fk_attribute_id = 75 AND modifier = -6
+UPDATE enchantment_join_attribute SET modifier = -4 WHERE fk_enchantment_id = 452 AND fk_attribute_id = 74 AND modifier = -6
+UPDATE skill_attribute SET modifier = -10 WHERE id = 51
+UPDATE skill_attribute SET modifier = -10 WHERE id = 52
+UPDATE skill SET points = 2 WHERE id = 85
+UPDATE enchantment SET duration = 2 WHERE id = 455
+UPDATE enchantment_join_attribute SET modifier = 3 WHERE fk_enchantment_id = 455 AND fk_attribute_id = 36 AND modifier = 5
+UPDATE enchantment_join_attribute SET modifier = 3 WHERE fk_enchantment_id = 455 AND fk_attribute_id = 37 AND modifier = 5
+UPDATE enchantment SET duration = 3 WHERE id = 456
+UPDATE enchantment_join_attribute SET modifier = 4 WHERE fk_enchantment_id = 456 AND fk_attribute_id = 36 AND modifier = 10
+UPDATE enchantment_join_attribute SET modifier = 4 WHERE fk_enchantment_id = 456 AND fk_attribute_id = 37 AND modifier = 10
+UPDATE enchantment_join_attribute SET modifier = 10 WHERE fk_enchantment_id = 552 AND fk_attribute_id = 36 AND modifier = 8
+UPDATE enchantment_join_attribute SET modifier = 20 WHERE fk_enchantment_id = 553 AND fk_attribute_id = 36 AND modifier = 15
