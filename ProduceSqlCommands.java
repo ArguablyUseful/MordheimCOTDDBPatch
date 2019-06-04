@@ -8,17 +8,18 @@ public class ProduceSqlCommands {
 	String filename;
 	String formatFile = "UTF-8";
 	
+	int NEXT_FRESH_UID_TABLE_SKILL_ATTRIBUTE = 666;
+	int NEXT_FRESH_UID_TABLE_ENCHANTMENT = 1324;
+	int NEXT_FRESH_UID_TABLE_SKILL_ENCHANTMENT = 933;
 	public static void main(String []args)
 	{
 		try {
 			new ProduceSqlCommands("sqlCommands.txt");
-		} catch (SQLException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	public ProduceSqlCommands(String filename) throws java.sql.SQLException, IOException
+	public ProduceSqlCommands(String filename) throws IOException
 	{
 		this.filename = filename;
 
@@ -32,8 +33,10 @@ public class ProduceSqlCommands {
 		this.patch_doc_06();
 		this.patch_doc_07();
 		this.patch_doc_08();
-		this.patch_doc_09();
 		
+		this.patch_doc_11();
+		this.patch_doc_12();
+		this.patch_doc_13();
 		writer.close();
 	}
 	
@@ -41,7 +44,7 @@ public class ProduceSqlCommands {
 	{
 		writer.print(sqlStatement += "\n");
 	}
-	private void ReplaceField(String tableName, String columnName, int value, int key) throws java.sql.SQLException
+	private void ReplaceField(String tableName, String columnName, int value, int key) 
 	{
 		String []keyCols = new String[1];
 		keyCols[0] = "id";
@@ -49,7 +52,7 @@ public class ProduceSqlCommands {
 		keys[0] = key;
 		ReplaceField(tableName, columnName, value, keyCols, keys);
 	}
-	private void ReplaceField(String tableName, String colunmName, int value, String []keyCols, int[] key) throws java.sql.SQLException
+	private void ReplaceField(String tableName, String colunmName, int value, String []keyCols, int[] key) 
 	{
 		String sql = "UPDATE " + tableName + " SET " + colunmName + " = ? WHERE";
 		for(int index = 0; index < keyCols.length; index++)
@@ -68,7 +71,7 @@ public class ProduceSqlCommands {
         this.WriteToFile(sql2);
 
 	}
-	private void AddEntry_enchantment_join_attribute(int fk_ench_id, int fk_attr_id, int modifier) throws java.sql.SQLException {
+	private void AddEntry_enchantment_join_attribute(int fk_ench_id, int fk_attr_id, int modifier) {
 	        String sql = "INSERT INTO enchantment_join_attribute(fk_enchantment_id,fk_attribute_id, modifier) VALUES(?,?,?)";
 	        String sql2 = new String(sql);
 			String regex = "\\?";
@@ -77,8 +80,111 @@ public class ProduceSqlCommands {
 			sql2 = sql2.replaceFirst(regex, Integer.toString(modifier));
 			this.WriteToFile(sql2);
 
-	   }
-	private void AddEntry_attribute_attribute(int id, int fk_attr_id_base, int fk_attr_id, int modifier) throws java.sql.SQLException
+	}
+	private void AddEntry_skill_enchantment(
+			int id,
+			int fk_skill_id,
+			int fk_enchantment_id,
+			int fk_enchantment_trigger_id,
+			int fk_unit_action_id_trigger,
+			int fk_skill_id_trigger,
+			int ratio,
+			int self,
+			int target_self,
+			int target_ally,
+			int target_enemy
+			)
+	{
+		String sql = "INSERT INTO skill_enchantment(id,fk_skill_id, fk_enchantment_id,fk_enchantment_trigger_id,fk_unit_action_id_trigger,fk_skill_id_trigger,ratio,self,target_self,target_ally,target_enemy) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+        String sql2 = new String(sql);
+		String regex = "\\?";
+		sql2 = sql2.replaceFirst(regex, Integer.toString(id));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(fk_skill_id));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(fk_enchantment_id));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(fk_enchantment_trigger_id));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(fk_unit_action_id_trigger));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(fk_skill_id_trigger));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(ratio));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(self));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(target_self));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(target_ally));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(target_enemy));
+		this.WriteToFile(sql2);
+	}
+	private void AddEntry_enchantment(
+			int id, 
+			String name,
+			int fk_effect_type_id,
+			int fk_enchantment_type_id,
+			int fk_enchantment_quality_id,
+			int fk_enchantment_consume_id,
+			int fk_enchantment_trigger_id_destroy,
+			int damage_min,
+			int damage_max,
+			int fk_enchantment_dmg_trigger_id,
+			int fk_attribute_id_dmg_resist_roll,
+			int duration,
+			int valid_next_action,
+			int indestructible,
+			int require_unit_state,
+			int change_unit_state,
+			int fk_unit_state_id_required,
+			int fk_unit_state_id_next,
+			int stackable,
+			int destroy_on_apply,
+			int keep_on_death,
+			int no_display,
+			int make_unit_visible,
+			int fk_enchantment_id_on_turn_start)
+	{
+		String sql = "INSERT INTO enchantment(id, name, fk_effect_type_id,fk_enchantment_type_id,fk_enchantment_quality_id,fk_enchantment_consume_id,"
+				+ "fk_enchantment_trigger_id_destroy,damage_min,damage_max,fk_enchantment_dmg_trigger_id,fk_attribute_id_dmg_resist_roll,"
+				+ "duration,valid_next_action,indestructible,require_unit_state,change_unit_state,fk_unit_state_id_required,fk_unit_state_id_next,"
+				+ "stackable,destroy_on_apply,keep_on_death,no_display,make_unit_visible,fk_enchantment_id_on_turn_start"
+				+ ") VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql2 = new String(sql);
+		String regex = "\\?";
+		sql2 = sql2.replaceFirst(regex, Integer.toString(id));
+		sql2 = sql2.replaceFirst(regex, "\'" + name + "\'");
+		sql2 = sql2.replaceFirst(regex, Integer.toString(fk_effect_type_id));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(fk_enchantment_type_id));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(fk_enchantment_quality_id));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(fk_enchantment_consume_id));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(fk_enchantment_trigger_id_destroy));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(damage_min));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(damage_max));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(fk_enchantment_dmg_trigger_id));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(fk_attribute_id_dmg_resist_roll));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(duration));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(valid_next_action));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(indestructible));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(require_unit_state));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(change_unit_state));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(fk_unit_state_id_required));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(fk_unit_state_id_next));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(stackable));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(destroy_on_apply));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(keep_on_death));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(no_display));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(make_unit_visible));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(fk_enchantment_id_on_turn_start));
+		
+		this.WriteToFile(sql2);
+	}
+	private void AddEntry_skill_attribute(int id, int fk_skill_id, int fk_attr_id, int fk_unit_action_id_trigger, int fk_skill_id_trigger, int modifier)
+	{
+	    String sql = "INSERT INTO skill_attribute(id, fk_skill_id, fk_attribute_id, fk_unit_action_id_trigger, fk_skill_id_trigger, modifier) VALUES(?,?,?,?,?,?)";
+        String sql2 = new String(sql);
+		String regex = "\\?";
+		sql2 = sql2.replaceFirst(regex, Integer.toString(id));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(fk_skill_id));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(fk_attr_id));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(fk_unit_action_id_trigger));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(fk_skill_id_trigger));
+		sql2 = sql2.replaceFirst(regex, Integer.toString(modifier));
+		this.WriteToFile(sql2);
+	}
+	private void AddEntry_attribute_attribute(int id, int fk_attr_id_base, int fk_attr_id, int modifier) 
 	{
 		String sql = "INSERT INTO attribute_attribute (id, fk_attribute_id, fk_attribute_id_base, modifier) VALUES(?,?,?,?)";
         
@@ -90,7 +196,7 @@ public class ProduceSqlCommands {
 		sql2 = sql2.replaceFirst(regex, Integer.toString(modifier));
 		this.WriteToFile(sql2);        
 	}
-	private void RemoveEntry_attribute_attribute(int id_key) throws java.sql.SQLException
+	private void RemoveEntry_attribute_attribute(int id_key) 
 	{
 		String sql = "DELETE FROM attribute_attribute WHERE ID = " + id_key;
 		String sql2 = new String(sql);
@@ -98,7 +204,7 @@ public class ProduceSqlCommands {
 		sql2 = sql2.replaceFirst(regex, Integer.toString(id_key));
 		this.WriteToFile(sql2);
 	}
-	private void RemoveEntry_skill_perform_skill(int id_key) throws java.sql.SQLException
+	private void RemoveEntry_skill_perform_skill(int id_key) 
 	{
 		String sql = "DELETE FROM skill_perform_skill WHERE ID = " + id_key;
 		
@@ -108,7 +214,13 @@ public class ProduceSqlCommands {
 		this.WriteToFile(sql2);
 		
 	}
-	private void patch_doc_00() throws java.sql.SQLException
+	private void Replace_enchantment_join_attribute(int fk_ench_id, int fk_attr_id, int mod, int newMod) 
+	{
+		String [] colKeys = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
+		int [] keys = {fk_ench_id, fk_attr_id, mod};
+		ReplaceField("enchantment_join_attribute", "modifier", newMod, colKeys, keys);
+	}
+	private void patch_doc_00() 
 	{
 		//perception buff
 		ReplaceField("enchantment", "duration", 3, 219);
@@ -151,7 +263,7 @@ public class ProduceSqlCommands {
 		//remove ranged resist from alertness
 		RemoveEntry_attribute_attribute(24);
 		//add ranged resist to intelligence
-		AddEntry_attribute_attribute(24, 10,74,1);
+		AddEntry_attribute_attribute(24, 10,74,1); //using old attribute id
 		
 		//--------------------ACTIVE SKILLS (STRENGTH)----------------
 		
@@ -180,13 +292,8 @@ public class ProduceSqlCommands {
 		
 	}
 		
-	private void Replace_enchantment_join_attribute(int fk_ench_id, int fk_attr_id, int mod, int newMod) throws java.sql.SQLException
-	{
-		String [] colKeys = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
-		int [] keys = {fk_ench_id, fk_attr_id, mod};
-		ReplaceField("enchantment_join_attribute", "modifier", newMod, colKeys, keys);
-	}
-	private void patch_doc_01() throws java.sql.SQLException
+	
+	private void patch_doc_01() 
 	{
 		//intensity 
 		//trivial to train
@@ -261,7 +368,7 @@ public class ProduceSqlCommands {
 		
 	}
 	
-	private void patch_doc_02() throws java.sql.SQLException
+	private void patch_doc_02() 
 	{
 		//Courage
 		ReplaceField("enchantment", "duration", 2, 123); 
@@ -358,7 +465,7 @@ public class ProduceSqlCommands {
 		
 		//meditation TODO
 	}
-	private void patch_doc_03() throws java.sql.SQLException
+	private void patch_doc_03() 
 	{
 		//staggering blow 458 457
 		ReplaceField("enchantment", "duration", 2, 458);
@@ -423,7 +530,7 @@ public class ProduceSqlCommands {
 		
 	}
 	
-	private void patch_doc_04() throws java.sql.SQLException
+	private void patch_doc_04()
 	{
 		//hand shot
 		ReplaceField("enchantment", "duration", 2, 492);
@@ -464,7 +571,7 @@ public class ProduceSqlCommands {
 		ReplaceField("skill_attribute", "modifier",-40, 344);
 		ReplaceField("skill_attribute", "modifier",-10, 345);
 	}
-	private void patch_doc_05() throws java.sql.SQLException
+	private void patch_doc_05() 
 	{
 		//blitz
 		ReplaceField("skill","points", 0,16 );
@@ -538,7 +645,7 @@ public class ProduceSqlCommands {
 		ReplaceField("skill","points",2, 11); //easy to master
 	}
 	
-	private void patch_doc_06() throws java.sql.SQLException
+	private void patch_doc_06()
 	{
 		//nerves of steel
 		ReplaceField("skill","stat_value", 3, 38);
@@ -622,7 +729,7 @@ public class ProduceSqlCommands {
 		ReplaceField("skill_attribute", "modifier", 30, 333);
 		
 	}
-	private void patch_doc_07() throws java.sql.SQLException
+	private void patch_doc_07()
 	{
 		//sixth sense
 		ReplaceField("skill", "points", 0, 5);
@@ -655,7 +762,7 @@ public class ProduceSqlCommands {
 		//swift counter TODO instruction unclear
 		
 	}
-	private void patch_doc_08() throws java.sql.SQLException
+	private void patch_doc_08() 
 	{
 		//overhead
 		ReplaceField("skill_attribute", "modifier", 10, 353);
@@ -711,9 +818,229 @@ public class ProduceSqlCommands {
 		//break defense TODO not found
 	}
 	
-	private void patch_doc_09() throws java.sql.SQLException
+	private void patch_doc_11() 
 	{
+		//combat expertise
+		ReplaceField("skill", "points", 0, 291);
+		ReplaceField("skill","points", 2, 292);
+		
+		Replace_enchantment_join_attribute(551,40,20,30);
+		Replace_enchantment_join_attribute(551,41,20,30);
+		
+		//flawless positioning
+		ReplaceField("skill_attribute", "modifier", 10, 129);
+		ReplaceField("skill_attribute", "modifier", 30, 130);
+		
+		//hunter
+		ReplaceField("skill_enchantment", "ratio", 40, 380);
+		ReplaceField("skill_enchantment", "ratio", 40, 382);
+		
+		ReplaceField("skill_enchantment", "ratio", 80, 381);
+		ReplaceField("skill_enchantment", "ratio", 80, 383);
+		
+		//prayer of swiftness
+		ReplaceField("enchantment", "duration", 2, 188);
+		ReplaceField("enchantment", "duration", 3, 189);
+		Replace_enchantment_join_attribute(189,41,30,20);
+		
+		//righteous fury
+		ReplaceField("skill_attribute", "modifier", -30, 57);
+		ReplaceField("skill_attribute", "modifier", -5, 58);
+		
+		ReplaceField("enchantment", "duration", 2, 232);
+		ReplaceField("enchantment", "duration", 3, 233);
+		
+		//sign of sigmar
+		ReplaceField("enchantment", "duration", 2, 406);
+		ReplaceField("enchantment", "duration", 3, 407);
+
+		//divine aegis
+		ReplaceField("skill_attribute", "modifier", 15, 59);
+		ReplaceField("skill_attribute", "modifier", 30, 60);
+		
+		//protection of sigmar
+		ReplaceField("skill_attribute", "modifier", 25, 133);
+		ReplaceField("skill_attribute", "modifier", 50, 134);
+		
+		//trial by pain
+		ReplaceField("enchantment", "duration", 2, 1098);
+		ReplaceField("enchantment", "duration", 3, 1099);
+		
+		//burn the witch
+		ReplaceField("enchantment", "duration", 2, 1102);
+		ReplaceField("enchantment", "duration", 3, 1103);
+		
+		//Fanatical zeal
+		
+		//TODO NOTE would need to add fresh lines to make the mastery last 3 turns
+		ReplaceField("enchantment", "duration", 2, 1104);
+		ReplaceField("enchantment", "duration", 3, 1105);
+		
+		//sigil of sigmar
+		ReplaceField("enchantment", "duration", 2, 1115);
+		ReplaceField("enchantment", "duration", 3, 1116);
+		this.Replace_enchantment_join_attribute(1115, 61, 20, 15);
+		this.Replace_enchantment_join_attribute(1116, 61, 40, 20);
+		
+		//witchfinder ward
+
+		int magic_res_attr = 53;
+		AddEntry_skill_attribute(this.NEXT_FRESH_UID_TABLE_SKILL_ATTRIBUTE++, 811, magic_res_attr, 0, 0, 10 );	
+		AddEntry_skill_attribute(this.NEXT_FRESH_UID_TABLE_SKILL_ATTRIBUTE++, 812, magic_res_attr, 0, 0, 20 );
+	}
+	private void patch_doc_12()
+	{
+		//black hunger
+		this.ReplaceField("enchantment",  "duration",  2, 120);
+		this.Replace_enchantment_join_attribute(120,61,20,10);
+		this.Replace_enchantment_join_attribute(120,72,-20,-10);
+		this.Replace_enchantment_join_attribute(120,73,-20,-10);
+		
+		this.ReplaceField("enchantment",  "duration",  3, 121);
+		this.Replace_enchantment_join_attribute(120,61,40,20);
+		this.Replace_enchantment_join_attribute(120,72,-40,-20);
+		this.Replace_enchantment_join_attribute(120,73,-40,-20);
+		
+		//numbing poison
+		this.ReplaceField("enchantment",  "duration",  2, 400);
+		this.ReplaceField("enchantment",  "duration",  2, 397);
+		this.Replace_enchantment_join_attribute(397, 12, -2, -1);
+		
+		this.ReplaceField("enchantment",  "duration",  3, 399);
+		this.ReplaceField("enchantment",  "duration",  3, 398);
+		
+		//warp poison
+		//TODO not found
+		
+		//poison expert
+		this.ReplaceField("skill_attribute", "modifier", -15, 97);
+		this.ReplaceField("skill_attribute", "modifier", -30, 98);
+		
+		//attracting lure
+		this.ReplaceField("skill",  "points",  0, 106);
+		this.ReplaceField("skill",  "points",  2, 107);
+		
+		this.Replace_enchantment_join_attribute(799, 114, -15, -5);
+		int tmp_ench_id = this.NEXT_FRESH_UID_TABLE_ENCHANTMENT++;
+		this.AddEntry_enchantment(tmp_ench_id,"skill_attracting_lure",3,0,2,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0);
+		this.AddEntry_enchantment_join_attribute(tmp_ench_id, 114, 25);
+		
+		
+		//blood offering
+		ReplaceField("skill","points", 0, 301);
+		ReplaceField("skill","points", 2, 302);
+		
+		ReplaceField("enchantment","duration",2, 190);
+		ReplaceField("enchantment","duration",3, 191);
+		
+		this.Replace_enchantment_join_attribute(190, 61, 25, 5);
+		this.Replace_enchantment_join_attribute(191, 61, 50, 10);
+		
+		//touch of palsy
+		ReplaceField("skill","points",0,299);
+		ReplaceField("skill","points",2,300);
+		ReplaceField("enchantment", "duration", 2, 408);
+		this.Replace_enchantment_join_attribute(408, 1, -2, -1);
+		ReplaceField("enchantment", "duration", 3, 409);
+		this.Replace_enchantment_join_attribute(409, 1, -4, -2);
+		this.Replace_enchantment_join_attribute(409, 16, -40, -30);
+		this.Replace_enchantment_join_attribute(409, 17, -40, -30);
+		this.Replace_enchantment_join_attribute(409, 18, -40, -30);
+		this.Replace_enchantment_join_attribute(409, 16, -109, -30);
+		this.Replace_enchantment_join_attribute(409, 16, -110, -30);
+		this.Replace_enchantment_join_attribute(409, 16, -111, -30);
+		this.Replace_enchantment_join_attribute(409, 16, -112, -30);
+		
+		//chaos evolution
+		ReplaceField("skill","points",0, 528);
+		ReplaceField("skill","points",2, 554);
+		
+		//chaotic advantage
+		ReplaceField("skill","points",0, 303);
+		ReplaceField("skill","points", 2, 304);
+		
+		this.Replace_enchantment_join_attribute(523, 123, 1, 2);
+		this.Replace_enchantment_join_attribute(524, 123, 1, 2);
+		
+		//tzeentch warding
+		ReplaceField("skill","points",0,108);
+		ReplaceField("skill","points",2,109);
+		
+		//death stench
+		//already 2 turns
+		this.Replace_enchantment_join_attribute(1270, 40, -5, -10);
+		this.Replace_enchantment_join_attribute(1270, 41, -5, -10);
+		this.Replace_enchantment_join_attribute(1270, 75, -5, -10);
+		
+		this.ReplaceField("enchantment", "duration", 3, 1271);
+		this.Replace_enchantment_join_attribute(1271, 40, -10, -15);
+		this.Replace_enchantment_join_attribute(1271, 41, -10, -15);
+		this.Replace_enchantment_join_attribute(1271, 75, -10, -15);
+		
+		//death trap
+		//TODO
+		//eye trap
+		//TODO
+		
+		
+		//body reconstruction
+		ReplaceField("skill_attribute", "modifier", 30, 629);
+		
+		//embedded wyrdstone
+		ReplaceField("skill","points",0,904);
+		ReplaceField("skill","points",2,905);
+		
+		//find the breach
+		this.Replace_enchantment_join_attribute(1268, 131, 5, 10);
+		this.Replace_enchantment_join_attribute(1269, 131, 10, 20);
+	}
+	private void patch_doc_13()
+	{
+		//liquid courage
+		this.ReplaceField("enchantment", "stackable", 1, 1049);
+		this.ReplaceField("enchantment", "stackable", 1, 1050);
+		this.ReplaceField("enchantment",  "duration", 3, 1050);
+		
+		this.Replace_enchantment_join_attribute(1050, 23, 30, 20);
+		
+		//ripost stance
+		//TODO cannot change the OP reduction to more than 1 (it uses a base enchantment that is used elsewhere), would need time to see how to mimic it
+
+		//two parry
+		this.AddEntry_skill_enchantment(this.NEXT_FRESH_UID_TABLE_SKILL_ENCHANTMENT++, 769, 1054, 0, 0, 0, 0, 1, 0, 0, 0);
+		//three parry
+		this.AddEntry_skill_enchantment(this.NEXT_FRESH_UID_TABLE_SKILL_ENCHANTMENT++, 770, 1055, 0, 0, 0, 0, 1, 0, 0, 0);
+		
+		//captain speech
+		ReplaceField("enchantment", "duration", 2, 1052);
+		ReplaceField("enchantment", "duration", 3, 1053);
+		this.Replace_enchantment_join_attribute(1053, 23, 40, 30);
+		this.Replace_enchantment_join_attribute(1053, 24, 40, 30);
+		this.Replace_enchantment_join_attribute(1053, 26, 40, 30);
+		
+		//white powder trap
+		//TODO
+		
+		//captain order
+		ReplaceField("enchantment", "duration", 2, 1056);
+		this.Replace_enchantment_join_attribute(1056, 61, 15, 5);
+		this.Replace_enchantment_join_attribute(1056, 62, 15, 5);
+		
+		ReplaceField("enchantment", "duration", 3, 1057);
+		this.Replace_enchantment_join_attribute(1057, 61, 30, 10);
+		this.Replace_enchantment_join_attribute(1057, 62, 30, 10);
+		
+		//hand bomb
+		//6 12 ws instead of 9 15 bs
+		
+		ReplaceField("skill","stat_value",6,763);
+		ReplaceField("skill","stat_value",12,764);
+		ReplaceField("skill","fk_attribute_id_stat",2,763);
+		ReplaceField("skill","fk_attribute_id_stat",2,764);
+		ReplaceField("skill","radius",5,763);
+		ReplaceField("skill","radius",5,764);
+		
+		//in and out
 		
 	}
-
 }
