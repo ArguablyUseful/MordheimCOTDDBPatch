@@ -37,6 +37,10 @@ public class ProduceSqlCommands {
 		this.patch_doc_11();
 		this.patch_doc_12();
 		this.patch_doc_13();
+		this.patch_doc_14();
+		
+		this.patch_doc_19();
+		
 		writer.close();
 	}
 	
@@ -223,10 +227,10 @@ public class ProduceSqlCommands {
 	private void patch_doc_00() 
 	{
 		//perception buff
-		ReplaceField("enchantment", "duration", 3, 219);
+		//ReplaceField("enchantment", "duration", 3, 219); --> REMOVED FROM SPEC.
 		AddEntry_enchantment_join_attribute(219, 74, 15);
-		//TODO adds ambush melee resistance buff
-		
+		//TODO adds ambush melee resistance buff --> REMOVED FROM SPEC.
+
 		//TODO spellcasting stuff
 		
 		//reducing climb by 20%
@@ -246,7 +250,7 @@ public class ProduceSqlCommands {
 		ReplaceField("enchantment_effect_enchantment", "fk_enchantment_trigger_id", 0, 218); //try out
 		
 		//so that the buff stays for 3 turns
-		ReplaceField("enchantment", "duration", 3, 1069); //seems a bit high to me.
+		ReplaceField("enchantment", "duration", 3, 1069); 
 		
 		//--------------changing effects for allocating points --------------
 		//removing melee res from WS
@@ -280,14 +284,34 @@ public class ProduceSqlCommands {
 			int [] keys = {81, 131};
 			ReplaceField("skill_attribute", "modifier", 30, colKeys, keys);
 		}
-		//kidney strike TODO
+		//kidney strike (name is puncture & puncture_mstr)
+		this.ReplaceField("enchantment", "duration", 2, 384);
+		this.ReplaceField("enchantment", "duration", 3, 385);
+		//ranged resistance = 74
+		{
+			String [] colKeys = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
+			int [] keys = {384, 75, -15};
+			ReplaceField("enchantment_join_attribute", "fk_attribute_id", 74, colKeys, keys);
+		}
+		this.Replace_enchantment_join_attribute(384, 74, -15, -20);
+		{
+			String [] colKeys = {"fk_enchantment_id", "fk_attribute_id", "modifier"};
+			int [] keys = {385, 75, -30};
+			ReplaceField("enchantment_join_attribute", "fk_attribute_id", 74, colKeys, keys);
+		}
 		//strong blow
 		{
 			String []colKeys = {"id", "fk_skill_id"};
 			int [] keys = {340,541};
 			ReplaceField("skill_attribute", "modifier", 25, colKeys, keys);
 		}
-		//daredevil TODO
+		//daredevil ( known as "careless strike")
+		this.ReplaceField("enchantment", "duration", 2, 164);
+		this.Replace_enchantment_join_attribute(164, 61, 75, 35);
+		this.Replace_enchantment_join_attribute(164, 75, -20, -10);
+		this.ReplaceField("enchantment", "duration", 3, 165);
+		this.Replace_enchantment_join_attribute(165, 61, 125, 50);
+		this.Replace_enchantment_join_attribute(165, 75, -10, -5);
 		
 		
 	}
@@ -353,13 +377,21 @@ public class ProduceSqlCommands {
 		//swift jump
 		ReplaceField("skill","points", 0,3); // trivial to learn
 		ReplaceField("skill","points", 2,4); //easy to master
-		//TODO -45% chances
+		ReplaceField("skill_attribute","modifier",-45,7);
+		ReplaceField("skill_attribute","modifier",-90,8);
+		ReplaceField("skill_attribute","modifier",-135,9);
 		
-		//wal runner
+		//wall runner
 		ReplaceField("skill","points", 2,2); //easy to master
-		//TODO -30%
+		ReplaceField("skill_attribute","modifier",-30, 1);
+		ReplaceField("skill_attribute","modifier",-60, 2);
+		ReplaceField("skill_attribute","modifier",-90, 3);
 		
-		//careful approach TODO
+		//careful approach named "balance"
+		this.ReplaceField("enchantment","duration",2, 382);
+		this.ReplaceField("enchantment","duration",2, 383);
+		this.Replace_enchantment_join_attribute(382, 1, -2, -1);
+		this.Replace_enchantment_join_attribute(383, 1, -2, -1);
 		
 		//prowl
 		ReplaceField("skill","points", 2,360); //easy to master
@@ -434,9 +466,21 @@ public class ProduceSqlCommands {
 		ReplaceField("enchantment", "duration", 2, 438);
 		ReplaceField("enchantment", "duration", 3, 439);
 		
-		//Wild casting TODO
-		
-		//quick casting TODO
+		//Wild casting NOTE : no major revision
+		this.Replace_enchantment_join_attribute(211, 28, 10, 5);
+		//plea NOTE : no major revision
+		this.Replace_enchantment_join_attribute(287, 65, 10, 5);
+
+		//quick casting NOTE : no major revision
+		this.ReplaceField("skill", "strategy_points", 1, 42);
+		this.ReplaceField("skill", "strategy_points", 1, 43);
+		this.Replace_enchantment_join_attribute(281, 30, -15, -5);
+		this.Replace_enchantment_join_attribute(280, 30, -30, -15);
+		//quick prayer NOTE : no major revision
+		this.ReplaceField("skill", "strategy_points", 1, 48);
+		this.ReplaceField("skill", "strategy_points", 1, 49);
+		this.Replace_enchantment_join_attribute(282, 30, -30, -15);
+		this.Replace_enchantment_join_attribute(283, 30, -15, -5);
 		
 		//exploit positioning
 		ReplaceField("enchantment", "duration", 2, 436);
@@ -461,9 +505,9 @@ public class ProduceSqlCommands {
 		Replace_enchantment_join_attribute(181,40,20,15);
 		Replace_enchantment_join_attribute(181,41,20,15);
 		
-		//introspection TODO
+		//introspection TODO --> REMOVED FROM SPEC
 		
-		//meditation TODO
+		//meditation TODO --> REMOVED FROM SPEC
 	}
 	private void patch_doc_03() 
 	{
@@ -505,7 +549,9 @@ public class ProduceSqlCommands {
 		ReplaceField("skill","points", 2, 215); // easy to master
 		Replace_enchantment_join_attribute(175,51,30,45);
 		
-		//combat focus TODO (because I'll need to check wheter "only next action" skills have special field -which they probably do have-
+		//combat focus 
+		this.ReplaceField("enchantment", "valid_next_action", 0, 525);
+		this.ReplaceField("enchantment", "valid_next_action", 0, 526);
 		
 		//jaw strike
 		//everything goes to 20 for 2 turns
@@ -558,14 +604,19 @@ public class ProduceSqlCommands {
 		/* NOTE : skill_enchantment for the mastery (skill 73) has ID 424 & 425 identical. entrenched is buggy ? */
 		Replace_enchantment_join_attribute(546,35,10,15);
 		
-		//nerve shot TODO
+		//nerve shot TODO --> REMOVED FROM SPECS
 		
-		//feint TODO (can't find it)
-		
+		//feint (name is parade) 
+		this.ReplaceField("skill", "points", 2, 267);
+		this.Replace_enchantment_join_attribute(448, 33, -50, -75);
 		//precise strike
 		ReplaceField("skill","points", 2, 264);
 		
-		//armor break TODO can't find it
+		//armor break (name is execution) 
+		this.ReplaceField("enchantment", "duration", 2, 449);
+		this.ReplaceField("enchantment", "duration", 3, 450);
+		this.Replace_enchantment_join_attribute(449, 130, -10, -15);
+		this.Replace_enchantment_join_attribute(450, 130, -25, -20);
 		
 		//head shot
 		ReplaceField("skill_attribute", "modifier",-40, 344);
@@ -602,7 +653,7 @@ public class ProduceSqlCommands {
 		ReplaceField("skill","stat_value", 9, 27);
 		ReplaceField("skill","points", 0, 26);
 		ReplaceField("skill","points", 2, 27);
-		//TODO major revision
+		//TODO major revision 
 		
 		//quick recovery
 		ReplaceField("skill", "points", 0, 24);
@@ -622,7 +673,9 @@ public class ProduceSqlCommands {
 		ReplaceField("skill", "points", 2, 239); //easy to master
 		ReplaceField("skill_attribute", "modifier", 30, 112); 
 		
-		//athletic expert TODO (not found)
+		//athletic expert called blessing of speed
+		this.ReplaceField("skill", "points", 0, 405);
+		this.ReplaceField("skill", "points", 2, 406);
 		
 		//acrobatic
 		ReplaceField("skill", "points", 0, 7);
@@ -1037,10 +1090,297 @@ public class ProduceSqlCommands {
 		ReplaceField("skill","stat_value",12,764);
 		ReplaceField("skill","fk_attribute_id_stat",2,763);
 		ReplaceField("skill","fk_attribute_id_stat",2,764);
-		ReplaceField("skill","radius",5,763);
-		ReplaceField("skill","radius",5,764);
+		
+		//RADIUS TODO
+		//ReplaceField("skill","radius",5,763); MUST CHECK
+		//ReplaceField("skill","radius",5,764); MUST CHECK
 		
 		//in and out
+		ReplaceField("enchantment","duration",3,1060);
+		ReplaceField("enchantment","duration",3,1061);
+		this.Replace_enchantment_join_attribute(1060, 76, 5, 10);
+		this.Replace_enchantment_join_attribute(1061, 76, 10, 30);
+		
+		//expert fencer
+		this.ReplaceField("skill_attribute", "modifier", 10, 475);
+		this.ReplaceField("skill_attribute", "modifier", 10, 476);
+		this.ReplaceField("skill_attribute", "modifier", 10, 622);
+		
+		this.ReplaceField("skill_attribute", "modifier", 20, 477);
+		this.ReplaceField("skill_attribute", "modifier", 20, 478);
+		this.ReplaceField("skill_attribute", "modifier", 20, 623);
+		
+		//tight crew
+		this.ReplaceField("skill", "points", 2, 776);
+		
+		//walk the topsail
+		this.ReplaceField("skill", "points", 0, 781);
+		this.ReplaceField("skill", "points", 2, 782);
+		
+		this.ReplaceField("skill_attribute", "modifier", 20, 481);
+		this.ReplaceField("skill_attribute", "modifier", 20, 482);
+		this.ReplaceField("skill_attribute", "modifier", 20, 483);
+		this.ReplaceField("skill_attribute", "modifier", 20, 484);
+		this.ReplaceField("skill_attribute", "modifier", 20, 485);
+		this.ReplaceField("skill_attribute", "modifier", 20, 486);
+		this.ReplaceField("skill_attribute", "modifier", 20, 487);
+		
+		this.ReplaceField("skill_attribute", "modifier", 60, 488);
+		this.ReplaceField("skill_attribute", "modifier", 60, 489);
+		this.ReplaceField("skill_attribute", "modifier", 60, 490);
+		this.ReplaceField("skill_attribute", "modifier", 60, 491);
+		this.ReplaceField("skill_attribute", "modifier", 60, 492);
+		this.ReplaceField("skill_attribute", "modifier", 60, 493);
+		this.ReplaceField("skill_attribute", "modifier", 60, 494);
+		
+		//survival instinct
+		
+		this.Replace_enchantment_join_attribute(1062, 36, 5, 15);
+		this.Replace_enchantment_join_attribute(1063, 36, 10, 30);
+		
+		//alpha howl
+		this.ReplaceField("enchantment", "duration", 2, 1120);
+		this.ReplaceField("enchantment", "duration", 3, 1121);
+		
+		this.Replace_enchantment_join_attribute(1121, 69, 4, 3);
+		this.Replace_enchantment_join_attribute(1121, 70, 4, 3);
+		
+		//crush the weak
+		this.ReplaceField("enchantment", "duration", 2, 1122);
+		this.Replace_enchantment_join_attribute(1122, 51, -15, -10);
+		this.ReplaceField("enchantment", "duration", 3, 1123);
+		this.Replace_enchantment_join_attribute(1123, 51, -30, -20);
+		
+		//ulric's fury
+		//TODO
+		
+		//northern tenacity
+		this.ReplaceField("enchantment", "duration", 2, 1126);
+		this.ReplaceField("enchantment", "duration", 3, 1127);
+	}
+	
+	private void patch_doc_14()
+	{
+		//vent
+		this.ReplaceField("enchantment", "duration", 2, 1031);
+		this.ReplaceField("enchantment", "duration", 3, 1032);
+		this.Replace_enchantment_join_attribute(1032, 33, -20, -15);
+		this.Replace_enchantment_join_attribute(1032, 35, -20, -15);
+		
+		
+		//warp fumes
+		this.ReplaceField("enchantment", "duration", 2, 1033);
+		this.ReplaceField("enchantment", "duration", 2, 1034);
+		
+		this.ReplaceField("enchantment", "duration", 2, 1035);
+		this.ReplaceField("enchantment", "duration", 2, 1036);
+		
+		this.Replace_enchantment_join_attribute(1035, 33, 20, 15);
+		this.Replace_enchantment_join_attribute(1035, 41, 20, 15);
+		
+		//warp globe
+		
+		
+		//melee & poison resistance : attr = 75 & 21
+		this.ReplaceField("enchantment", "duration", 2, 1243); // magic & poison resist
+		//ranged & critical resistance: attr = 74& 51
+		this.ReplaceField("enchantment", "duration", 2, 1245); // ranged & crit resis
+		//magic & stun resistance : attr = 53 & 127
+		this.ReplaceField("enchantment", "duration", 2, 1247); // magic & stun resist
+		
+		this.Replace_enchantment_join_attribute(1243, 75, -15, -10);
+		this.Replace_enchantment_join_attribute(1243, 21, -15, -10);
+		
+		this.Replace_enchantment_join_attribute(1245, 74, -15, -10);
+		this.Replace_enchantment_join_attribute(1245, 51, -15, -10);
+		
+		this.Replace_enchantment_join_attribute(1247, 53, -15, -10);
+		this.Replace_enchantment_join_attribute(1247, 127, -15, -10);
+		
+		this.ReplaceField("enchantment", "duration", 3, 1244);
+		this.ReplaceField("enchantment", "duration", 3, 1246);
+		this.ReplaceField("enchantment", "duration", 3, 1248);
+		
+		//enriched globe
+		//1249, 1251, 1253
+		//& 1250, 1252, 1254 ?
+		this.ReplaceField("enchantment", "duration", 2, 1249);
+		this.ReplaceField("enchantment", "duration", 2, 1251);
+		this.ReplaceField("enchantment", "duration", 2, 1253);
+		
+		this.ReplaceField("enchantment", "duration", 3, 1250);
+		this.ReplaceField("enchantment", "duration", 3, 1252);
+		this.ReplaceField("enchantment", "duration", 3, 1254);
+		
+		this.Replace_enchantment_join_attribute(1249, 75, 15, 10);
+		this.Replace_enchantment_join_attribute(1249, 21, 15, 10);
+		
+		this.Replace_enchantment_join_attribute(1251, 74, 15, 10);
+		this.Replace_enchantment_join_attribute(1251, 51, 15, 10);
+		
+		this.Replace_enchantment_join_attribute(1253, 127, 15, 10);
+		this.Replace_enchantment_join_attribute(1253, 53, 15, 10);
+		
+		//wyrdstone lure
+		//TODO the base game doesnre-use the same enchantment for both nrmal & mastery making a "new" effect that lasts 3 turns require moretime
+		
+		//infused globe
+		//TODO trap
+		
+		//strangling globe
+		this.ReplaceField("enchantment", "duration", 2, 1064);
+		this.ReplaceField("enchantment", "duration", 3, 1065);
+		//warp resistance
+		this.ReplaceField("skill", "points", 0, 754);
+		this.ReplaceField("skill", "points", 2, 755);
+		
+		//warp rush
+		this.ReplaceField("enchantment", "duration", 3, 1040);
+		this.ReplaceField("enchantment", "duration", 3, 1041);
+		
+		this.Replace_enchantment_join_attribute(1040, 76, 10, 15);
+		this.Replace_enchantment_join_attribute(1041, 76, 20, 45);
+		
+		//dagger specialist
+		this.ReplaceField("skill_attribute", "modifier", -10, 467);
+		this.ReplaceField("skill_attribute", "modifier", -10, 468);
+		this.ReplaceField("skill_attribute", "modifier", 10, 624);
+		
+		this.ReplaceField("skill_attribute", "modifier", -20, 469);
+		this.ReplaceField("skill_attribute", "modifier", -20, 470);
+		this.ReplaceField("skill_attribute", "modifier", 20, 625);
+		
+		//invigorating fumes
+		this.ReplaceField("skill_attribute", "modifier", 15, 455);
+		this.ReplaceField("skill_attribute", "modifier", 15, 456);
+		
+		this.ReplaceField("skill_attribute", "modifier", 30, 465);
+		this.ReplaceField("skill_attribute", "modifier", 30, 466);
+		
+		//paralysing discharge
+		this.ReplaceField("enchantment", "duration", 2, 1038);
+		this.ReplaceField("enchantment", "duration", 3, 1039);
+		
+		//potent globe
+		this.ReplaceField("enchantment", "duration", 2, 1046);
+		this.ReplaceField("enchantment", "duration", 3, 1047);
+		
+		this.Replace_enchantment_join_attribute(1047, 21, -20, -15);
+		
+		//ritual of defiance
+		this.ReplaceField("enchantment", "duration", 2, 1137);
+		this.Replace_enchantment_join_attribute(1138, 1, -2, -1); //-1 meters
+		
+		
+		this.ReplaceField("enchantment", "duration", 3, 1139);
+		this.ReplaceField("enchantment", "duration", 3, 1140);
+		this.Replace_enchantment_join_attribute(1140, 1, -4, -2);
+		
+		//ritual of suffering
+		this.ReplaceField("enchantment", "duration", 2, 1133);
+		this.ReplaceField("enchantment", "duration", 3, 1135);
+		
+		//ritual of scorn
+		this.ReplaceField("enchantment", "duration", 2, 1130);
+		
+		this.ReplaceField("enchantment", "duration", 3, 1131);
+		this.ReplaceField("enchantment", "duration", 3, 1132);
+		
+		//daub of change
+		this.ReplaceField("skill", "points", 0,  851);
+		this.ReplaceField("skill", "points", 2,  852);
+		
+		//daub of hatred
+		this.ReplaceField("skill", "points", 0,  853);
+		this.ReplaceField("skill", "points", 2,  854);
+	}
+	
+	private void patch_doc_19()
+	{
+		//squire curse
+		this.ReplaceField("enchantment", "duration", 3, 306);
+		
+		//adaptable defense
+		//TODO need to modify 
+		/* must A) create a new enchantment that is linked to the skill, with a line in enchantment_effect_enchantment where trigger id is 4 (on fail) and attribute is 33 (melee hit roll) 
+		 * the idea is that passive becomes an ehcnatment that produce an enchantment when a melee hit roll fails (4 trigger & 33). The produced enchantment is the effects (aka the current enchantment when hit damage succeed) 
+		 */
+		//chain shot
+		//TODO same
+		//momentum 
+		//TODO same
+		//defense breach
+		
+		//defense breach (called night master)
+		this.ReplaceField("skill_attribute", "modifier", -25, 261);
+		this.ReplaceField("skill_attribute", "modifier", -25, 404);
+		
+		//fleet footed
+		this.ReplaceField("enchantment", "duration", 3, 301);
+		this.Replace_enchantment_join_attribute(301, 1, 3, 2);
+		
+		//warp resonance
+		this.ReplaceField("enchantment", "duration", 3, 345);
+		
+		//warp immunity
+		this.ReplaceField("skill_attribute", "modifier", 5, 405);
+		
+		//warp rage
+		this.ReplaceField("enchantment", "duration", 3, 346);
+		this.Replace_enchantment_join_attribute(346, 41, 10, 15);
+		
+		//for sigmar
+		this.ReplaceField("enchantment", "duration", 2, 314);
+		this.Replace_enchantment_join_attribute(314, 1, 3, 2);
+		
+		//unsettling charge
+		//TODO
+		
+		//repentance
+		this.ReplaceField("enchantment", "duration", 3, 347);
+		
+		//military training
+		//TODO (missing attack)
+		
+		//sigmar's chosen
+		//TODO
+		
+		//purge the heretic
+		//TODO
+		
+		
+		//vengeance
+		this.ReplaceField("enchantment", "duration", 3, 1095);
+		//stat 62
+		this.AddEntry_enchantment_join_attribute(1095, 62, 10);
+		
+		//pyre of the righteous
+		//TODO
+		
+		//blood sacrifice
+		//TODO
+		
+		//shadow lord touch
+		this.ReplaceField("enchantment", "duration", 3, 348);
+		
+		//norse charge
+		this.ReplaceField("enchantment", "duration", 3, 318);
+		this.Replace_enchantment_join_attribute(318, 61, 20, 10);
+		
+		//lurker
+		this.ReplaceField("skill_attribute", "fk_attribute_id", 37, 266);
+		
+		//humble servant
+		//TODO
+		
+		//disease carrier
+		this.ReplaceField("enchantment", "duration", 3, 1263);
+		this.ReplaceField("enchantment", "duration", 3, 1264);
+		this.ReplaceField("enchantment", "duration", 3, 1265);
+		this.Replace_enchantment_join_attribute(1263, 76, -5, -10);
+		this.Replace_enchantment_join_attribute(1264, 51, -3, -5);
+		this.Replace_enchantment_join_attribute(1265, 40, -3, -5);
+		this.Replace_enchantment_join_attribute(1265, 41, -3, -5);
 		
 	}
 }
